@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    :root {
+      --primary-color: #0078d4;
+      --primary-hover: #005a9e;
+      --success-bg: #e6f4ea;
+      --success-text: #137333;
+      --success-border: #ceead6;
+      --warning-bg: #fef7e0;
+      --warning-text: #b06000;
+      --warning-border: #feebc8;
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-main: #323130;
+      --text-muted: #5f6368;
+      --border-color: #dadce0;
+      --radius: 6px;
+    }
+
+    body {
+      width: 340px;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      margin: 0;
+      padding: 16px;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .version {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 0 0 16px 0;
+      line-height: 1.4;
+    }
+
+    .toggle-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .toggle-label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input { display: none; }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider { background-color: #34a853; }
+    input:checked + .slider:before { transform: translateX(20px); }
+
+    .connection-banner {
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .connection-banner.connected {
+      background-color: var(--success-bg);
+      color: var(--success-text);
+      border-color: var(--success-border);
+    }
+
+    .connection-banner.disconnected {
+      background-color: var(--warning-bg);
+      color: var(--warning-text);
+      border-color: var(--warning-border);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+      margin-bottom: 16px;
+    }
+
+    .field { margin-bottom: 12px; }
+    .field:last-of-type { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 8px 10px;
+      box-sizing: border-box;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    input:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+
+    .btn-group { display: flex; gap: 10px; }
+
+    button {
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    #saveBtn {
+      background-color: #fff;
+      color: var(--text-main);
+      border-color: #dadce0;
+      flex: 1;
+    }
+
+    #saveBtn:hover { background-color: #f1f3f4; }
+
+    #processBtn {
+      background-color: var(--primary-color);
+      color: white;
+      flex: 2;
+    }
+
+    #processBtn:hover { background-color: var(--primary-hover); }
+    #processBtn:disabled { background-color: #e8eaed; color: #9aa0a6; cursor: not-allowed; }
+
+    .status-panel {
+      margin-top: 16px;
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 13px;
+      display: none;
+      border: 1px solid #deecf9;
+      background-color: #f3f9fd;
+      color: #005a9e;
+    }
+
+    .status-header { font-weight: 600; margin-bottom: 6px; }
+    #statusText { margin: 0; font-size: 12px; }
+
+    #progressContainer {
+      background-color: rgba(0,0,0,0.05);
+      border-radius: 10px;
+      height: 6px;
+      width: 100%;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    #progressBar {
+      background-color: var(--primary-color);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-color);
+      letter-spacing: 0.3px;
+    }
+
+    .workflow-select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      font-size: 13px;
+      background: #fff;
+      color: var(--text-main);
+    }
+
+    .output-panel {
+      display: none;
+      margin-top: 16px;
+    }
+
+    .output-panel h4 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .output-panel textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 9px;
+      box-sizing: border-box;
+      resize: vertical;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font: 12px/1.45 Consolas, monospace;
+    }
+
+    .copy-btn {
+      margin: 6px 0 14px;
+      padding: 7px 10px;
+      background: #fff;
+      color: var(--primary-color);
+      border-color: #b8d7f2;
+    }
+
+    .copy-btn:hover { background: #f3f9fd; }
+  </style>
+</head>
+<body>
+
+  <div class="header-row">
+    <div class="brand">
+      <h3 id="appTitle">QA Copilot</h3>
+    </div>
+    <span class="version">1.0.0</span>
+  </div>
+  <p class="subtitle">Generate test cases and feature test scopes via Copilot</p>
+
+  <div class="toggle-card">
+    <span class="toggle-label">Enable Extension Workflows</span>
+    <label class="switch">
+      <input type="checkbox" id="extensionToggle" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div id="connectionBanner" class="connection-banner disconnected">
+    <span id="connectionIcon">⚠️</span>
+    <span id="connectionText">Local server required</span>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label>Workflow</label>
+      <select id="workflow" class="workflow-select">
+        <option value="bug-test-case">Bug → Test Case</option>
+        <option value="feature-test-scope">Feature → Test Scope</option>
+        <option value="feature-bug-hunt">Feature → Bug Hunt</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Azure DevOps Org</label>
+      <input type="text" id="adoOrg" placeholder="e.g., your-organization">
+    </div>
+
+    <div class="field">
+      <label>Project Name</label>
+      <input type="text" id="adoProject" placeholder="e.g., your-project">
+    </div>
+
+    <div class="field">
+      <label>Personal Access Token</label>
+      <input type="password" id="adoPat" placeholder="Enter ADO PAT">
+    </div>
+  </div>
+
+  <input type="hidden" id="openAiKey" value="vscode-copilot">
+
+  <div class="btn-group">
+    <button id="saveBtn">Save Config</button>
+    <button id="processBtn">Generate & Link</button>
+  </div>
+  <button id="openRunBtn" class="copy-btn" style="width:100%;margin-top:10px">
+    Open Progress &amp; Results
+  </button>
+
+  <div id="statusPanel" class="status-panel">
+    <div class="status-header" id="statusTitle">Processing</div>
+    <p id="statusText"></p>
+    <div id="progressContainer"><div id="progressBar"></div></div>
+  </div>
+
+  <div id="outputPanel" class="output-panel">
+    <h4 id="scopeHeading">Test scope</h4>
+    <textarea id="scopeOutput" readonly></textarea>
+    <button id="copyScopeBtn" class="copy-btn">Copy test scope</button>
+    <h4 id="commentHeading">Feature closing comment</h4>
+    <textarea id="commentOutput" readonly></textarea>
+    <button id="copyCommentBtn" class="copy-btn">Copy closing comment</button>
+  </div>
+
+  <div class="footer-note">
+    <b>Powered by Copilot • Innovatively Built by CiCQA</b>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

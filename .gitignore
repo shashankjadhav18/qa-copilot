@@ -1,0 +1,14 @@
+node_modules/
+.env
+.env.*
+*.log
+*.pat
+secrets/
+private/
+resume-data/
+test-data/
+*.pdf
+*.doc
+*.docx
+*.csv
+*.xlsx
